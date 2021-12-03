@@ -1,0 +1,48 @@
+{
+    "name": "grambas/dcc-verifier",
+    "description": "Decode and verify digital COVID-19 certificate against germany signer trust list public key",
+    "type": "library",
+    "keywords": [
+        "ddc",
+        "dcc",
+        "digital green certificate",
+        "digital covid certificate",
+        "COVID-19"
+    ],
+    "require": {
+        "php" : "^7.3|^8.0",
+        "ext-zlib": "*",
+        "ext-openssl": "*",
+        "ext-json": "*",
+        "mhauri/base45": "^0.1.1",
+        "fgrosse/phpasn1": "^2.0@dev",
+        "web-auth/cose-lib": "^3.3",
+        "guzzlehttp/guzzle": "^7.4",
+        "spomky-labs/cbor-php": "v2.0.x-dev",
+        "thecodingmachine/safe": "^1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Grambas\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Grambas\\Test\\": "tests"
+        }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.0",
+        "phpunit/phpunit": "^9.0",
+        "phpstan/phpstan": "^0.12.37",
+        "friendsofphp/php-cs-fixer": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "Mindaugas Milius",
+            "email": "milius@mindau.de",
+            "homepage": "https://mindau.de/"
+        }
+    ],
+    "minimum-stability": "dev"
+}
