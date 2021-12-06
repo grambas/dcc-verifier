@@ -7,7 +7,7 @@ on:
 
 jobs:
   tests:
-    name: Tests (PHP ${{ matrix.php-versions }})
+    name: Unit Tests (PHP ${{ matrix.php-versions }})
     # https://hub.docker.com/_/ubuntu/
     runs-on: ubuntu-latest
     strategy:
@@ -17,6 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        uses: eu-digital-green-certificates/dgc-testdata@main
+        with:
+          remote: true
 
       - name: Cache Composer dependencies
         uses: actions/cache@v2
