@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Grambas\Model;
 
+use DateTime;
+
 /**
  * https://github.com/ehn-dcc-development/ehn-dcc-schema/blob/release/1.3.0/DCC.Types.schema.json
  */
@@ -37,7 +39,7 @@ class Vaccination implements CertificateInterface
     /**
      * The date when the described dose was received, in the format YYYY-MM-DD.
      *
-     * @var \DateTime
+     * @var DateTime
      */
     public $receiveDate;
 
@@ -86,24 +88,24 @@ class Vaccination implements CertificateInterface
     public $uniqueIdentifier;
 
 
-    /** @var \DateTime */
+    /** @var DateTime */
     public $validFrom;
 
     /**
      * Certificate validation expiration date
      *
-     * @var \DateTime
+     * @var DateTime
      */
     public $validTo;
 
 
-    public function __construct(array $v, \DateTime $validFrom, \DateTime $validTo)
+    public function __construct(array $v, DateTime $validFrom, DateTime $validTo)
     {
         $data = $v[0];
         $this->uniqueIdentifier = $data['ci'];
         $this->medicalProduct = $data['mp'];
         $this->vaccineProphylaxis = $data['vp'];
-        $this->receiveDate = new \DateTime($data['dt']);
+        $this->receiveDate = new DateTime($data['dt']);
         $this->doseNumber = (int) $data['dn'];
         $this->totalNumberOfDosesRequired = (int) $data['sd'];
         $this->marketingAuthorisationHolder = $data['ma'];
@@ -132,7 +134,7 @@ class Vaccination implements CertificateInterface
         return $this->isFullyVaccinated();
     }
 
-    public function isValidForDate(\DateTime $date): bool
+    public function isValidForDate(DateTime $date): bool
     {
         if (!$this->isValid()) {
             return false;
@@ -141,12 +143,12 @@ class Vaccination implements CertificateInterface
         return $date >= $this->getValidFrom() && $date <= $this->getValidTo();
     }
 
-    public function getValidFrom(): \DateTime
+    public function getValidFrom(): DateTime
     {
         return $this->validFrom;
     }
 
-    public function getValidTo(): \DateTime
+    public function getValidTo(): DateTime
     {
         return $this->validTo;
     }

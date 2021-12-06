@@ -25,6 +25,7 @@ use Grambas\Model\DCC;
 use Grambas\Repository\TrustListRepositoryInterface;
 use InvalidArgumentException;
 use Mhauri\Base45;
+use RuntimeException;
 use function Safe\zlib_decode;
 use function Safe\openssl_pkey_get_public;
 use function Safe\openssl_x509_read;
@@ -84,7 +85,7 @@ class DccVerifier
 
         try {
             return new DCC($cbor->getNormalizedData());
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new CBORDecodeException('invalid payload');
         }
     }
@@ -92,7 +93,7 @@ class DccVerifier
     public function verify(): bool
     {
         if (null === $this->trustListRepository) {
-            throw new \RuntimeException('DCC can not be verified without TrustListRepository.');
+            throw new RuntimeException('DCC can not be verified without TrustListRepository.');
         }
 
         if (null === $this->cose) {
@@ -113,7 +114,7 @@ class DccVerifier
         $publicKeyData = openssl_pkey_get_details($publicKey);
 
         if (false === $publicKeyData) {
-            throw new \RuntimeException('invalid public key');
+            throw new RuntimeException('invalid public key');
         }
 
         $algoId = $this->getAlgorithm();
@@ -136,7 +137,7 @@ class DccVerifier
                 RsaKey::DATA_N => $publicKeyData['rsa']['n'],
             ]);
         } else {
-            throw new \RuntimeException('Bad encryption algorithm');
+            throw new RuntimeException('Bad encryption algorithm');
         }
 
         return $encryptAlgo->verify(
@@ -209,7 +210,7 @@ class DccVerifier
         $data = $this->cborDecoder->decode($stream)->getNormalizedData();
 
         if (!in_array($data[1], self::SUPPORTED_ALGO)) {
-            throw new \RuntimeException('Certificate algorithm with identifier ' . $data[1] . ' not supported');
+            throw new RuntimeException('Certificate algorithm with identifier ' . $data[1] . ' not supported');
         }
 
         return (int) $data[1];
@@ -277,7 +278,7 @@ class DccVerifier
     {
         try {
             $result = zlib_decode($data);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new QRCodeDecodeException('QRCode could not be decompressed with zlib');
         }
 

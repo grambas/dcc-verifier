@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Grambas\Model;
 
+use DateTime;
+
 interface CertificateInterface
 {
     /**
@@ -16,7 +18,7 @@ interface CertificateInterface
 
     public function getId(): int;
     public function isValid(): bool;
-    public function isValidForDate(\DateTime $date): bool;
-    public function getValidFrom(): \DateTime;
-    public function getValidTo(): \DateTime;
+    public function isValidForDate(DateTime $date): bool;
+    public function getValidFrom(): DateTime;
+    public function getValidTo(): DateTime;
 }

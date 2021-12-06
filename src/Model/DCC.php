@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Grambas\Model;
 
+use DateTime;
+
 /**
  * https://github.com/ehn-dcc-development/hcert-spec/blob/main/hcert_spec.md
  * https://ec.europa.eu/health/sites/default/files/ehealth/docs/covid-certificate_json_specification_en.pdf
@@ -12,10 +14,10 @@ namespace Grambas\Model;
  */
 class DCC
 {
-    /** @var \DateTime */
+    /** @var DateTime */
     public $validFrom;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     public $validTo;
 
     /**
@@ -89,8 +91,8 @@ class DCC
 
     public function __construct(array $payload)
     {
-        $this->validFrom = (new \DateTime())->setTimestamp((int) $payload[4]);
-        $this->validTo = (new \DateTime())->setTimestamp((int) $payload[6]);
+        $this->validFrom = (new DateTime())->setTimestamp((int) $payload[4]);
+        $this->validTo = (new DateTime())->setTimestamp((int) $payload[6]);
         $data = $payload[-260][1];
 
         $this->dateOfBirth = $data['dob'];
@@ -131,7 +133,7 @@ class DCC
         return $types & $this->getCurrentCertificate()->getId() && $this->getCurrentCertificate()->isValid();
     }
 
-    public function isValidForDate(\DateTimeInterface $date, int $types = 0): bool
+    public function isValidForDate(DateTime $date, int $types = 0): bool
     {
         // certificate is not in asked types
         if (($types & $this->getCurrentCertificate()->getId()) === 0) {

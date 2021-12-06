@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Grambas\Model;
 
+use DateTime;
+
 /**
  * https://github.com/ehn-dcc-development/ehn-dcc-schema/blob/release/1.3.0/DCC.Types.schema.json
  */
@@ -23,10 +25,10 @@ class Recovery implements CertificateInterface
      */
     public $positiveResultDate;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     public $validFrom;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     public $validTo;
 
     /** @var string */
@@ -40,8 +42,8 @@ class Recovery implements CertificateInterface
 
     public function __construct(array $r)
     {
-        $this->validFrom = new \DateTime($r[0]['df']);
-        $this->validTo = new \DateTime($r[0]['du']);
+        $this->validFrom = new DateTime($r[0]['df']);
+        $this->validTo = new DateTime($r[0]['du']);
 
         // optional for validation
         $this->diseaseAgentTargeted = $r[0]['tg'] ?? '';
@@ -62,17 +64,17 @@ class Recovery implements CertificateInterface
         return true;
     }
 
-    public function isValidForDate(\DateTime $date): bool
+    public function isValidForDate(DateTime $date): bool
     {
         return $date >= $this->getValidFrom() && $date <= $this->getValidTo();
     }
 
-    public function getValidFrom(): \DateTime
+    public function getValidFrom(): DateTime
     {
         return $this->validFrom;
     }
 
-    public function getValidTo(): \DateTime
+    public function getValidTo(): DateTime
     {
         return $this->validTo;
     }

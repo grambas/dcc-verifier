@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Grambas\Model;
 
 use CBOR\TextStringObject;
+use DateInterval;
+use DateTime;
 
 /**
  * https://github.com/ehn-dcc-development/ehn-dcc-schema/blob/release/1.3.0/DCC.Types.schema.json
@@ -35,11 +37,10 @@ class AbstractTest
     /** @var string */
     public $testResult;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     public $sampleCollectionDate;
 
-
-    /** @var ?string */
+    /** @var string|null */
     public $name;
 
     /** @var string */
@@ -57,9 +58,9 @@ class AbstractTest
         $this->testingCenter =  $t[0]['tc'] ?? '';
 
         if ($t[0]['sc'] instanceof TextStringObject) {
-            $this->sampleCollectionDate = new \DateTime($t[0]['sc']->getNormalizedData());
+            $this->sampleCollectionDate = new DateTime($t[0]['sc']->getNormalizedData());
         } else {
-            $this->sampleCollectionDate =  new \DateTime($t[0]['sc']);
+            $this->sampleCollectionDate =  new DateTime($t[0]['sc']);
         }
 
         $this->sampleCollectionDate->setTimezone(new \DateTimeZone('UTC'));
@@ -85,27 +86,27 @@ class AbstractTest
         return $this->isNegative();
     }
 
-    public function isValidForDate(\DateTime $date, string $intervalOffset = 'P1D'): bool
+    public function isValidForDate(DateTime $date, string $intervalOffset = 'P1D'): bool
     {
         if (!$this->isValid()) {
             return false;
         }
 
         $tmp = clone $this->sampleCollectionDate;
-        $maxDate = $tmp->add(new \DateInterval($intervalOffset));
+        $maxDate = $tmp->add(new DateInterval($intervalOffset));
 
         return $date >= $this->sampleCollectionDate && $date <= $maxDate;
     }
 
-    public function getValidFrom(): \DateTime
+    public function getValidFrom(): DateTime
     {
         return $this->sampleCollectionDate;
     }
 
-    public function getValidTo(): \DateTime
+    public function getValidTo(): DateTime
     {
         $tmp = clone $this->sampleCollectionDate;
 
-        return $tmp->add(new \DateInterval('P1D'));
+        return $tmp->add(new DateInterval('P1D'));
     }
 }

@@ -6,6 +6,7 @@ namespace Grambas\Client;
 
 use Cose\Algorithm\Signature\ECDSA\ECSignature;
 use GuzzleHttp\Client;
+use RuntimeException;
 
 /**
  * https://github.com/eu-digital-green-certificates/dgc-participating-countries/issues/10
@@ -69,7 +70,7 @@ class GermanyTrustListClient
         );
 
         if (false === $result) {
-            throw new \RuntimeException('New trust list could not be saved!');
+            throw new RuntimeException('New trust list could not be saved!');
         }
 
         return self::UPDATED;
@@ -80,19 +81,19 @@ class GermanyTrustListClient
         $response = $this->getClient()->request('GET', $this->url);
 
         if ($response->getStatusCode() !== 200) {
-            throw new \RuntimeException('');
+            throw new RuntimeException('');
         }
 
         $content = (string) $response->getBody();
         if (empty($content)) {
-            throw new \RuntimeException('Trust list body not valid!');
+            throw new RuntimeException('Trust list body not valid!');
         }
 
         /** On the first line the base64 encoded signature of the contents of from the second line  */
         [$signature, $content] = explode(PHP_EOL, $content);
 
         if (!is_string($signature) || !is_string($content)) {
-            throw new \RuntimeException('Trust list data not valid!');
+            throw new RuntimeException('Trust list data not valid!');
         }
 
         $this->verify($signature, $content);
@@ -105,7 +106,7 @@ class GermanyTrustListClient
         $pem = file_get_contents($this->pemFile);
 
         if (empty($pem)) {
-            throw new \RuntimeException('Pem file could not be located');
+            throw new RuntimeException('Pem file could not be located');
         }
 
         $decodedSignature =  base64_decode($signature);
@@ -114,7 +115,7 @@ class GermanyTrustListClient
         $isValid = 1 === openssl_verify($content, $derSignature, $pem, 'sha256');
 
         if (!$isValid) {
-            throw new \RuntimeException('Signature validation failed: ' . openssl_error_string());
+            throw new RuntimeException('Signature validation failed: ' . openssl_error_string());
         }
     }
 

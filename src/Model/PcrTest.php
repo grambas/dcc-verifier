@@ -6,7 +6,7 @@ namespace Grambas\Model;
 
 class PcrTest extends AbstractTest implements CertificateInterface
 {
-    /** @var ?string */
+    /** @var string|null */
     public $name;
 
     public function __construct(array $t)
