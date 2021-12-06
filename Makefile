@@ -18,7 +18,11 @@ fixer: vendor
 	vendor/bin/php-cs-fixer fix
 
 unit: vendor
+	 XDEBUG_MODE=coverage vendor/bin/phpunit --stop-on-failure
+
+coverage: vendor
 	 XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover=./.phpunit.cache/coverage.xml --coverage-html=./.phpunit.cache/html-coverage/
+
 
 static: vendor
 	vendor/bin/phpstan analyse src --level 8
