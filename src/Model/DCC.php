@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Grambas\Model;
 
 use DateTime;
+use Grambas\Exception\DccVerifierException;
 
 /**
  * https://github.com/ehn-dcc-development/hcert-spec/blob/main/hcert_spec.md
@@ -20,11 +21,7 @@ class DCC
     /** @var DateTime */
     public $validTo;
 
-    /**
-     * Max 80 UTF-8 characters
-     *
-     * @var string
-     */
+    /** @var string */
     public $issuer;
 
     /**
@@ -37,9 +34,7 @@ class DCC
      */
     public $country;
 
-    /**
-     * @var ?string
-     */
+    /** @var string|null */
     public $firstName;
 
     /**
@@ -50,45 +45,37 @@ class DCC
      * Exactly 1 (one) non-empty field MUST be provided, only
      * including characters A-Z and <. Maximum leng
      *
-     * @var ?string
+     * @var string|null
      */
     public $standardisedFirstName;
 
-
-    /**
-     * @var string
-     */
+    /** @var string */
     public $lastName;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $standardisedLastName;
 
-    /**
-     * @var string ISO 8601 YYYY-MM-DD, YYYY-MM, YYYY or empty
-     */
+    /** @var string ISO 8601 YYYY-MM-DD, YYYY-MM, YYYY or empty */
     public $dateOfBirth;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $version;
 
-    /** @var ?Vaccination */
+    /** @var Vaccination|null */
     public $vaccination;
 
-    /** @var ?AbstractTest */
+    /** @var AbstractTest|null */
     public $test;
 
-    /** @var ?Recovery */
+    /** @var Recovery|null */
     public $recovery;
 
-    /**
-     * @var CertificateInterface
-     */
+    /** @var CertificateInterface */
     public $subject;
 
+    /**
+     * @throws DccVerifierException
+     */
     public function __construct(array $payload)
     {
         $this->validFrom = (new DateTime())->setTimestamp((int) $payload[4]);
@@ -124,7 +111,7 @@ class DCC
         }
 
         if (null === $this->subject) {
-            throw new \RuntimeException('no subject parsed');
+            throw new DccVerifierException('No subject parsed');
         }
     }
 

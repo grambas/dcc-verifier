@@ -19,16 +19,14 @@ use Cose\Key\Key;
 use Cose\Key\RsaKey;
 use Exception;
 use Grambas\Cbor\CoseSign1Tag;
-use Grambas\Exception\CBORDecodeException;
-use Grambas\Exception\QRCodeDecodeException;
+use Grambas\Exception\DccVerifierException;
 use Grambas\Model\DCC;
 use Grambas\Repository\TrustListRepositoryInterface;
-use InvalidArgumentException;
 use Mhauri\Base45;
 use RuntimeException;
-use function Safe\zlib_decode;
 use function Safe\openssl_pkey_get_public;
 use function Safe\openssl_x509_read;
+use function Safe\zlib_decode;
 
 class DccVerifier
 {
@@ -70,14 +68,14 @@ class DccVerifier
     }
 
     /**
-     * @throws CBORDecodeException
+     * @throws DccVerifierException
      */
     public function getDCC(): DCC
     {
         $payloadInBytes = self::getQRCodePayload();
 
         if (!$payloadInBytes instanceof ByteStringObject) {
-            throw new InvalidArgumentException('Not a valid certificate. The payload is not a byte string.');
+            throw new DccVerifierException('Not a valid certificate. The payload is not a byte string.');
         }
 
         $stream = new StringStream($payloadInBytes->getValue());
@@ -86,14 +84,17 @@ class DccVerifier
         try {
             return new DCC($cbor->getNormalizedData());
         } catch (Exception $exception) {
-            throw new CBORDecodeException('invalid payload');
+            throw new DccVerifierException('Invalid payload', 0, $exception);
         }
     }
 
+    /**
+     * @throws DccVerifierException
+     */
     public function verify(): bool
     {
         if (null === $this->trustListRepository) {
-            throw new RuntimeException('DCC can not be verified without TrustListRepository.');
+            throw new DccVerifierException('DCC can not be verified without TrustListRepository.');
         }
 
         if (null === $this->cose) {
@@ -109,15 +110,23 @@ class DccVerifier
             $certData = $dsc->getRawData();
         }
 
-        $cert = openssl_x509_read($certData);
-        $publicKey = openssl_pkey_get_public($cert);
-        $publicKeyData = openssl_pkey_get_details($publicKey);
 
-        if (false === $publicKeyData) {
-            throw new RuntimeException('invalid public key');
+        try {
+            $cert = openssl_x509_read($certData);
+            $publicKey = openssl_pkey_get_public($cert);
+            $publicKeyData = openssl_pkey_get_details($publicKey);
+        } catch (Exception $exception) {
+            throw new DccVerifierException('Failed to parse cert data', 0, $exception);
         }
 
+        $encryptAlgo = null;
+        $key = null;
         $algoId = $this->getAlgorithm();
+
+        if (!in_array($algoId, self::SUPPORTED_ALGO, true)) {
+            throw new DccVerifierException(sprintf('Encryption algorithm with ID "%s" not supported', $algoId));
+        }
+
         if (ES256::ID === $algoId) {
             $encryptAlgo = new ES256();
             $key = Key::createFromData([ // ECDSA
@@ -128,7 +137,6 @@ class DccVerifier
                 Ec2Key::DATA_Y => $publicKeyData['ec']['y'],
             ]);
         } elseif (PS256::ID === $algoId) {
-            // RSASSA-PSS
             $encryptAlgo = new PS256();
             $key = Key::createFromData([
                 Key::TYPE => Key::TYPE_RSA,
@@ -136,8 +144,6 @@ class DccVerifier
                 RsaKey::DATA_E => $publicKeyData['rsa']['e'],
                 RsaKey::DATA_N => $publicKeyData['rsa']['n'],
             ]);
-        } else {
-            throw new RuntimeException('Bad encryption algorithm');
         }
 
         return $encryptAlgo->verify(
@@ -177,7 +183,7 @@ class DccVerifier
     }
 
     /**
-     * @throws CBORDecodeException|QRCodeDecodeException
+     * @throws DccVerifierException
      */
     public function decode(): DCC
     {
@@ -188,16 +194,16 @@ class DccVerifier
         $cbor = $this->cborDecoder->decode($cborStream);
 
         if (!$cbor instanceof CoseSign1Tag) {
-            throw new CBORDecodeException('Not a valid certificate. Not a CoseSign1 type.');
+            throw new DccVerifierException('Not a valid certificate. Not a CoseSign1 type.');
         }
 
         $this->cose = $cbor->getValue();
         if (!$this->cose instanceof ListObject) {
-            throw new CBORDecodeException('Not a valid certificate. No list.');
+            throw new DccVerifierException('Not a valid certificate. No list.');
         }
 
         if (4 !== $this->cose->count()) {
-            throw new CBORDecodeException('Not a valid certificate. The list size is not correct.');
+            throw new DccVerifierException('Not a valid certificate. The list size is not correct.');
         }
 
         return $this->getDCC();
@@ -251,7 +257,7 @@ class DccVerifier
     /**
      * Remove prefix from qr code payload which is not part of encrypted payload
      *
-     * @throws QRCodeDecodeException
+     * @throws DccVerifierException
      */
     private function decode45(): string
     {
@@ -266,20 +272,20 @@ class DccVerifier
 
         try {
             return (new Base45())->decode($qrContent ?? $this->raw);
-        } catch (Exception $e) {
-            throw new QRCodeDecodeException('QRCode could not be decoded with base45');
+        } catch (Exception $exception) {
+            throw new DccVerifierException('QRCode could not be decoded with base45', 0, $exception);
         }
     }
 
     /**
-     * @throws QRCodeDecodeException
+     * @throws DccVerifierException
      */
     private function decompressQrCode(string $data): string
     {
         try {
             $result = zlib_decode($data);
         } catch (Exception $exception) {
-            throw new QRCodeDecodeException('QRCode could not be decompressed with zlib');
+            throw new DccVerifierException('QRCode could not be decompressed with zlib');
         }
 
         return $result;

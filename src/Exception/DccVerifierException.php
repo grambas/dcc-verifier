@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Grambas\Exception;
 
-class QRCodeDecodeException extends \Exception
+use Exception;
+
+class DccVerifierException extends Exception
 {
 }

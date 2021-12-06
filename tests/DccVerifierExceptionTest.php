@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace Grambas\Test;
 
 use Grambas\DccVerifier;
-use Grambas\Exception\CBORDecodeException;
-use Grambas\Exception\QRCodeDecodeException;
+use Grambas\Exception\DccVerifierException;
 use Grambas\Model\DCC;
 use PHPUnit\Framework\TestCase;
 
-class QrCodeDecoderExceptionTest extends TestCase
+class DccVerifierExceptionTest extends TestCase
 {
     use DccAssertionHelperTrait;
 
     public function test_base45_decode_error(): void
     {
-        $this->expectException(QRCodeDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->expectExceptionMessage('QRCode could not be decoded with base45');
 
         $verifier = new DccVerifier('test');
@@ -26,7 +25,7 @@ class QrCodeDecoderExceptionTest extends TestCase
     public function test_zlib_decompress_error(): void
     {
         $base45Encoded = '7WE QE'; // => test
-        $this->expectException(QRCodeDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->expectExceptionMessage('QRCode could not be decompressed with zlib');
 
         $verifier = new DccVerifier($base45Encoded);
@@ -35,31 +34,31 @@ class QrCodeDecoderExceptionTest extends TestCase
 
     public function test_zlib_compression_broken(): void
     {
-        $this->expectException(QRCodeDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->getDecodedDccAndExpected('/common/2DCode/raw/Z1.json');
     }
 
     public function test_zlib_not_compressed(): void
     {
-        $this->expectException(QRCodeDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->getDecodedDccAndExpected('/common/2DCode/raw/Z2.json');
     }
 
     public function test_decode_exception(): void
     {
-        $this->expectException(QRCodeDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->getDecodedDccAndExpected('/common/2DCode/raw/B1.json');
     }
 
     public function test_invalid_cbor_payload(): void
     {
-        $this->expectException(CBORDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->getDecodedDccAndExpected('/common/2DCode/raw/CBO1.json');
     }
 
     public function test_invalid_cbor_payload2(): void
     {
-        $this->expectException(CBORDecodeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->getDecodedDccAndExpected('/common/2DCode/raw/CBO2.json');
     }
 
@@ -71,15 +70,15 @@ class QrCodeDecoderExceptionTest extends TestCase
         $data[6] = 1638555991;
         $data[-260][1] = json_decode($json, true);
 
-        static::expectException(\RuntimeException::class);
-        static::expectExceptionMessage('no subject parsed');
+        static::expectException(DccVerifierException::class);
+        static::expectExceptionMessage('No subject parsed');
 
         new DCC($data);
     }
 
     public function test_verify_without_repository(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(DccVerifierException::class);
         $this->expectExceptionMessage('DCC can not be verified without TrustListRepository.');
 
         (new DccVerifier(''))->verify();
