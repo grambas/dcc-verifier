@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Grambas\\": "src"
+            "Grambas\\": "src/"
         }
     },
     "autoload-dev": {
