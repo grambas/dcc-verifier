@@ -15,10 +15,10 @@
         "ext-openssl": "*",
         "ext-json": "*",
         "mhauri/base45": "^0.1.1",
-        "fgrosse/phpasn1": "^2.0@dev",
+        "fgrosse/phpasn1": "^2.1",
         "web-auth/cose-lib": "^3.3",
-        "guzzlehttp/guzzle": "^7.4",
-        "spomky-labs/cbor-php": "v2.0.x-dev",
+        "guzzlehttp/guzzle": "^6.5 || ^7.4",
+        "spomky-labs/cbor-php": "v2.0.1",
         "thecodingmachine/safe": "^1.3"
     },
     "autoload": {
