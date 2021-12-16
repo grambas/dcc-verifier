@@ -25,7 +25,7 @@ coverage: vendor
 
 
 static: vendor
-	vendor/bin/phpstan analyse src --level 8
+	vendor/bin/phpstan analyse src --level 5
 
 test: fixer unit static
 
