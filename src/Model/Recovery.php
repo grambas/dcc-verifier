@@ -64,17 +64,12 @@ class Recovery implements CertificateInterface
         return true;
     }
 
-    public function isValidForDate(DateTime $date): bool
-    {
-        return $date >= $this->getValidFrom() && $date <= $this->getValidTo();
-    }
-
     public function getValidFrom(): DateTime
     {
         return $this->validFrom;
     }
 
-    public function getValidTo(): DateTime
+    public function getValidTo(): ?DateTime
     {
         return $this->validTo;
     }

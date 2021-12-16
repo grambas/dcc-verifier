@@ -87,19 +87,7 @@ class Vaccination implements CertificateInterface
      */
     public $uniqueIdentifier;
 
-
-    /** @var DateTime */
-    public $validFrom;
-
-    /**
-     * Certificate validation expiration date
-     *
-     * @var DateTime
-     */
-    public $validTo;
-
-
-    public function __construct(array $v, DateTime $validFrom, DateTime $validTo)
+    public function __construct(array $v)
     {
         $data = $v[0];
         $this->uniqueIdentifier = $data['ci'];
@@ -112,8 +100,6 @@ class Vaccination implements CertificateInterface
         $this->diseaseAgentTargeted = $data['tg'];
         $this->country = $data['co'];
         $this->issuer = $data['is'];
-        $this->validTo = $validTo;
-        $this->validFrom = $validFrom;
     }
 
     public function getId(): int
@@ -134,22 +120,13 @@ class Vaccination implements CertificateInterface
         return $this->isFullyVaccinated();
     }
 
-    public function isValidForDate(DateTime $date): bool
-    {
-        if (!$this->isValid()) {
-            return false;
-        }
-
-        return $date >= $this->getValidFrom() && $date <= $this->getValidTo();
-    }
-
     public function getValidFrom(): DateTime
     {
-        return $this->validFrom;
+        return $this->receiveDate;
     }
 
-    public function getValidTo(): DateTime
+    public function getValidTo(): ?DateTime
     {
-        return $this->validTo;
+        return null;
     }
 }

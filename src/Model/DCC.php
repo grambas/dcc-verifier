@@ -93,7 +93,7 @@ class DCC
 
         // v, t or r. Can only be one type and only one in array
         if (isset($data['v'])) {
-            $this->vaccination = new Vaccination($data['v'], $this->validFrom, $this->validTo);
+            $this->vaccination = new Vaccination($data['v']);
             $this->subject = $this->vaccination;
         } elseif (isset($data['t'])) {
             if (AbstractTest::TYPE_NAAT === $data['t'][0]['tt']) {
@@ -118,16 +118,6 @@ class DCC
     public function isValidFor(int $types): bool
     {
         return $types & $this->getCurrentCertificate()->getId() && $this->getCurrentCertificate()->isValid();
-    }
-
-    public function isValidForDate(DateTime $date, int $types = 0): bool
-    {
-        // certificate is not in asked types
-        if (($types & $this->getCurrentCertificate()->getId()) === 0) {
-            return false;
-        }
-
-        return $this->getCurrentCertificate()->isValidForDate($date);
     }
 
     public function getCurrentCertificate(): CertificateInterface
