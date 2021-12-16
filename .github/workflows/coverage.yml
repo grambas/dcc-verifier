@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          remote: true
+          submodules: recursive
 
       - name: Cache Composer dependencies
         uses: actions/cache@v2
