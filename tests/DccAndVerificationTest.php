@@ -46,15 +46,6 @@ class DccAndVerificationTest extends TestCase
         static::assertVerification($data);
     }
 
-
-    //yield [$this->testFilesDir . '/CZ/2DCode/raw/5.json']; 1 doses from 2
-    //yield [$this->testFilesDir . '/CZ/2DCode/raw/15.json']; 1 doses from 2
-//        yield [$this->testFilesDir . '/DE/2DCode/raw/4.json']; 1 doses from 2
-    //DK
-    //SPAIN?
-    //FR
-    //yield [$this->testFilesDir . '/LT/2DCode/raw/2.json']; not tagged cboar tag
-    //PL PLS
     public function validVaccines(): iterable
     {
         yield '/AT/2DCode/raw/1.json' => ['/AT/2DCode/raw/1.json'];
@@ -87,7 +78,7 @@ class DccAndVerificationTest extends TestCase
         yield '/RO/2DCode/raw/1.json' => ['/RO/2DCode/raw/1.json'];
         yield '/RO/2DCode/raw/2.json' => ['/RO/2DCode/raw/2.json'];
         yield '/SE/2DCode/raw/1.json' => ['/SE/2DCode/raw/1.json'];
-        //yield '/SG/2DCode/raw/1.json' => ['/SG/2DCode/raw/1.json']; // https://github.com/eu-digital-green-certificates/dgc-testdata/pull/408
+        yield '/SG/2DCode/raw/1.json' => ['/SG/2DCode/raw/1.json']; // https://github.com/eu-digital-green-certificates/dgc-testdata/pull/408
         yield '/SI/2DCode/raw/VAC.json' => ['/SI/2DCode/raw/VAC.json'];
         yield '/SK/2DCode/raw/1.json' => ['/SK/2DCode/raw/1.json'];
         yield '/SK/2DCode/raw/2.json' => ['/SK/2DCode/raw/2.json']; // DGC with vaccination entry Comirnaty (1 dose)
@@ -174,8 +165,8 @@ class DccAndVerificationTest extends TestCase
         yield '/SE/2DCode/raw/2.json' => ['/SE/2DCode/raw/2.json']; // NAAT
         yield '/SE/2DCode/raw/3.json' => ['/SE/2DCode/raw/3.json']; // NAAT
         yield '/SE/2DCode/raw/4.json' => ['/SE/2DCode/raw/4.json']; // RAT
-        //yield '/SG/2DCode/raw/2.json' => ['/SG/2DCode/raw/2.json']; // NAAT // https://github.com/eu-digital-green-certificates/dgc-testdata/pull/408
-        //yield '/SG/2DCode/raw/3.json' => ['/SG/2DCode/raw/3.json']; // RAAT // https://github.com/eu-digital-green-certificates/dgc-testdata/pull/408
+        yield '/SG/2DCode/raw/2.json' => ['/SG/2DCode/raw/2.json']; // NAAT // https://github.com/eu-digital-green-certificates/dgc-testdata/pull/408
+        yield '/SG/2DCode/raw/3.json' => ['/SG/2DCode/raw/3.json']; // RAAT // https://github.com/eu-digital-green-certificates/dgc-testdata/pull/408
         yield '/SI/2DCode/raw/test-AG.json' => ['/SI/2DCode/raw/test-AG.json']; //RAT
         yield '/SI/2DCode/raw/test-PCR.json' => ['/SI/2DCode/raw/test-PCR.json']; // NAAT
         yield '/SK/2DCode/raw/7.json' => ['/SK/2DCode/raw/7.json']; // RAT
