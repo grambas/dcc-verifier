@@ -47,4 +47,4 @@ jobs:
           flags: tests
           name: codecov-umbrella
           fail_ci_if_error: false
-          verbose: true
+          verbose: false
