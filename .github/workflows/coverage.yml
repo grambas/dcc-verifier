@@ -1,19 +1,18 @@
-name: Dcc Verifier Tests
+name: Coverage badge update
 on:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
-  tests:
-    name: Unit Tests (PHP ${{ matrix.php-versions }})
+  coverage:
+    name: Coverage
     # https://hub.docker.com/_/ubuntu/
-    runs-on: ubuntu-latest
+    runs-on: Coverage badge update
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.4']
+        php-versions: ['8.0']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,8 +32,18 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: zlib, openssl, json
 
-      - name: Install Composer dependencies
+      - name: Install composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
 
-      - name: Unit tests
-        run: make unit
+      - name: Create coverage reprot
+        run: make coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./.phpunit.cache/coverage.xml
+          flags: tests
+          name: codecov-umbrella
+          yml: ./codecov.yml
+          fail_ci_if_error: true
