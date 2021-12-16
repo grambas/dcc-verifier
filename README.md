@@ -2,8 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
+[![coverage](https://codecov.io/gh/grambas/dcc-verifier/branch/main/graph/badge.svg?token=5XZZPANO03)](https://codecov.io/gh/grambas/dcc-verifier)
 [![Total Downloads][ico-downloads]][link-downloads]
 
 Alpha version of digital COVID-19 verification implementation with php.
@@ -58,6 +57,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ``` bash
 $ make test
+$ make coverage
 ```
 
 ## Contributing
@@ -85,9 +85,7 @@ The MIT License (MIT), see [License File](LICENSE.md) and [NOTICE](NOTICE.md) fo
 [ico-downloads]: https://img.shields.io/packagist/dt/grambas/dcc-verifier.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/grambas/dcc-verifier
-[link-travis]: https://travis-ci.org/grambas/dcc-verifier
 [link-scrutinizer]: https://scrutinizer-ci.com/g/grambas/dcc-verifier/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/grambas/dcc-verifier
 [link-downloads]: https://packagist.org/packages/grambas/dcc-verifier
 [link-author]: https://github.com/grambas
 [link-contributors]: ../../contributors
