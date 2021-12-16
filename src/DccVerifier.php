@@ -24,6 +24,7 @@ use Grambas\Model\DCC;
 use Grambas\Repository\TrustListRepositoryInterface;
 use Mhauri\Base45;
 use RuntimeException;
+use Throwable;
 use function Safe\openssl_pkey_get_public;
 use function Safe\openssl_x509_read;
 use function Safe\zlib_decode;
@@ -83,7 +84,7 @@ class DccVerifier
 
         try {
             return new DCC($cbor->getNormalizedData());
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             throw new DccVerifierException('Invalid payload', 0, $exception);
         }
     }
