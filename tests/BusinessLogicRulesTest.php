@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Grambas\Test;
 
-use _PHPStan_76800bfb5\Nette\Utils\DateTime;
+use DateTime;
 use Grambas\Model\CertificateInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -19,9 +19,9 @@ class BusinessLogicRulesTest extends TestCase
         static::assertTrue($dcc->vaccination->isValid());
         static::assertTrue($dcc->isValidFor(CertificateInterface::VACCINATION));
 
-        static::assertFalse($dcc->isValidForDate(new \DateTime('now'), CertificateInterface::VACCINATION));
+        static::assertFalse($dcc->isValidForDate(new DateTime('now'), CertificateInterface::VACCINATION));
 
-        $now = new \DateTime();
+        $now = new DateTime();
         $dcc->getCurrentCertificate()->validFrom = (clone $now)->modify('- 2 hours');
         $dcc->getCurrentCertificate()->validTo = (clone $now)->modify('+ 2 hours');
         static::assertTrue($dcc->isValidForDate((clone $now), CertificateInterface::VACCINATION));
@@ -42,27 +42,27 @@ class BusinessLogicRulesTest extends TestCase
 
         static::assertFalse($dcc->vaccination->isFullyVaccinated());
         static::assertFalse($dcc->vaccination->isValid());
-        static::assertFalse($dcc->vaccination->isValidForDate(new \DateTime()));
+        static::assertFalse($dcc->vaccination->isValidForDate(new DateTime()));
         static::assertFalse($dcc->isValidFor(CertificateInterface::VACCINATION));
     }
 
     public function test_vaccine_expired(): void
     {
         $dcc = $this->decode('/CY/2DCode/raw/6.json');
-        $dcc->getCurrentCertificate()->validTo = (new \DateTime('now'))->modify('- 2 hours');
+        $dcc->getCurrentCertificate()->validTo = (new DateTime('now'))->modify('- 2 hours');
 
         static::assertTrue($dcc->vaccination->isFullyVaccinated());
-        static::assertFalse($dcc->isValidForDate(new \DateTime('now'), CertificateInterface::VACCINATION));
+        static::assertFalse($dcc->isValidForDate(new DateTime('now'), CertificateInterface::VACCINATION));
     }
 
     public function test_recovery_valid(): void
     {
         $dcc = $this->decode('/PL/1.3.0/2DCode/raw/10.json');
 
-        $dcc->recovery->validFrom = new \DateTime('today');
-        $dcc->recovery->validTo = (new \DateTime('now'))->add(new \DateInterval('P1D'));
+        $dcc->recovery->validFrom = new DateTime('today');
+        $dcc->recovery->validTo = (new DateTime('now'))->add(new \DateInterval('P1D'));
 
-        static::assertTrue($dcc->recovery->isValidForDate(new \DateTime('now')));
+        static::assertTrue($dcc->recovery->isValidForDate(new DateTime('now')));
         static::assertTrue($dcc->isValidFor(CertificateInterface::RECOVERY));
         static::assertTrue($dcc->isValidFor(CertificateInterface::VACCINATION | CertificateInterface::RECOVERY));
         static::assertFalse($dcc->isValidFor(CertificateInterface::VACCINATION));
@@ -72,10 +72,10 @@ class BusinessLogicRulesTest extends TestCase
     {
         $dcc = $this->decode('/PL/1.3.0/2DCode/raw/10.json');
 
-        $dcc->recovery->validFrom = (new \DateTime('now'))->modify('-2 hours');
-        $dcc->recovery->validTo = (new \DateTime('now'))->modify('+2 hours');
+        $dcc->recovery->validFrom = (new DateTime('now'))->modify('-2 hours');
+        $dcc->recovery->validTo = (new DateTime('now'))->modify('+2 hours');
 
-        static::assertTrue($dcc->recovery->isValidForDate(new \DateTime('now')));
+        static::assertTrue($dcc->recovery->isValidForDate(new DateTime('now')));
         static::assertTrue($dcc->isValidFor(CertificateInterface::RECOVERY));
         static::assertTrue($dcc->isValidFor(CertificateInterface::VACCINATION | CertificateInterface::RECOVERY));
         static::assertFalse($dcc->isValidFor(CertificateInterface::VACCINATION));
@@ -85,7 +85,7 @@ class BusinessLogicRulesTest extends TestCase
     {
         $dcc = $this->decode('/PL/1.3.0/2DCode/raw/10.json');
 
-        static::assertFalse($dcc->recovery->isValidForDate(new \DateTime('2010-10-10')));
+        static::assertFalse($dcc->recovery->isValidForDate(new DateTime('2010-10-10')));
     }
 
     public function test_naat_negative(): void
@@ -98,7 +98,7 @@ class BusinessLogicRulesTest extends TestCase
         static::assertFalse($dcc->isValidFor(CertificateInterface::RAPID_TEST));
 
         $dcc->test->sampleCollectionDate = (new DateTime())->modify('-30 Minutes');
-        static::assertTrue($dcc->isValidForDate(new \DateTime(), CertificateInterface::PCR_TEST));
+        static::assertTrue($dcc->isValidForDate(new DateTime(), CertificateInterface::PCR_TEST));
     }
 
     public function test_naat_positive(): void
@@ -109,7 +109,7 @@ class BusinessLogicRulesTest extends TestCase
         static::assertFalse($dcc->test->isNegative());
         static::assertFalse($dcc->isValidFor(CertificateInterface::PCR_TEST));
 
-        static::assertFalse($dcc->isValidForDate(new \DateTime(), CertificateInterface::PCR_TEST));
+        static::assertFalse($dcc->isValidForDate(new DateTime(), CertificateInterface::PCR_TEST));
     }
 
     public function test_naat_positive2(): void
@@ -126,7 +126,7 @@ class BusinessLogicRulesTest extends TestCase
     {
         $dcc = $this->decode('/HU/2DCode/raw/3.json');
 
-        $dcc->test->testResult = (new \DateTime('now'))->modify('+2 hours');
+        $dcc->test->testResult = (new DateTime('now'))->modify('+2 hours');
 
         static::assertTrue($dcc->test->isRapidTest());
         static::assertFalse($dcc->test->isNegative());
