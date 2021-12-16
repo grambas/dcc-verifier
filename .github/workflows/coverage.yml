@@ -1,4 +1,5 @@
 name: Coverage badge update
+
 on:
   push:
     branches:
@@ -6,9 +7,9 @@ on:
 
 jobs:
   coverage:
-    name: Coverage
+    name: Coverage badge update
     # https://hub.docker.com/_/ubuntu/
-    runs-on: Coverage badge update
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
