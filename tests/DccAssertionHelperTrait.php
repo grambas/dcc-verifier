@@ -19,9 +19,9 @@ trait DccAssertionHelperTrait
     {
         static::assertEquals($expected['ver'], $dcc->version);
         static::assertEquals($expected['dob'], $dcc->dateOfBirth);
-        static::assertEquals($expected['nam']['gn'], $dcc->firstName);
-        static::assertEquals($expected['nam']['gnt'], $dcc->standardisedFirstName);
-        static::assertEquals($expected['nam']['fn'], $dcc->lastName);
+        static::assertEquals($expected['nam']['gn'] ?? null, $dcc->firstName);
+        static::assertEquals($expected['nam']['gnt'] ?? null, $dcc->standardisedFirstName);
+        static::assertEquals($expected['nam']['fn']  ?? null, $dcc->lastName);
         static::assertEquals($expected['nam']['fnt'], $dcc->standardisedLastName);
 
         $current =  $dcc->getCurrentCertificate();
