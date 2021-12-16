@@ -49,7 +49,7 @@ class DCC
      */
     public $standardisedFirstName;
 
-    /** @var string */
+    /** @var string|null */
     public $lastName;
 
     /** @var string */
@@ -83,7 +83,7 @@ class DCC
         $data = $payload[-260][1];
 
         $this->dateOfBirth = $data['dob'];
-        $this->lastName = $data['nam']['fn'];
+        $this->lastName = $data['nam']['fn'] ?? null;
         $this->standardisedLastName = $data['nam']['fnt'];
         $this->version = $data['ver'];
 
