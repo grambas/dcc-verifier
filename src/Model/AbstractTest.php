@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Grambas\Model;
 
 use CBOR\TextStringObject;
-use DateInterval;
 use DateTime;
 
 /**
@@ -86,27 +85,13 @@ class AbstractTest
         return $this->isNegative();
     }
 
-    public function isValidForDate(DateTime $date, string $intervalOffset = 'P1D'): bool
-    {
-        if (!$this->isValid()) {
-            return false;
-        }
-
-        $tmp = clone $this->sampleCollectionDate;
-        $maxDate = $tmp->add(new DateInterval($intervalOffset));
-
-        return $date >= $this->sampleCollectionDate && $date <= $maxDate;
-    }
-
     public function getValidFrom(): DateTime
     {
         return $this->sampleCollectionDate;
     }
 
-    public function getValidTo(): DateTime
+    public function getValidTo(): ?DateTime
     {
-        $tmp = clone $this->sampleCollectionDate;
-
-        return $tmp->add(new DateInterval('P1D'));
+        return null;
     }
 }

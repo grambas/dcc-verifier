@@ -8,7 +8,7 @@ class RapidTest extends AbstractTest implements CertificateInterface
 {
     public const ID = 8;
 
-    /** @var ?string */
+    /** @var string|null */
     public $testDeviceIdentifier;
 
     public function __construct(array $t)

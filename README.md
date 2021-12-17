@@ -35,7 +35,7 @@ This package implements Germany public trust list api [repository](https://githu
 
     // 1. Download / Update Germany signer trust list
     $client = new GermanyTrustListClient($trustListDir);
-    $client->update()
+    $client->update();
     
     // 2. Init existing trust list repository.
     $trustListRepository = new GermanyTrustListRepository($trustListDir);
@@ -47,8 +47,17 @@ This package implements Germany public trust list api [repository](https://githu
     // 4. Decode & verify
     $dcc = $verifier->decode(); // get certificate info
     $verifier->verify(); // validate against signer signature
+    
+    // 5. Validate if Certificate (Vaccination, Recovery or Test) conforms  specific business rules for example if
+    // fully vaccinated or test is negetive
+    $isValid = $dcc->isValid()
+    
+    // 6. Check certificate validation date
+    $validator = new DateValidator($dcc);
+    $isValidForDate = $validator->isValidForDate(new \DateTime());
 ```
 
+Of course validation steps 4. 5. and 6 can be checked independently and in your preferred order
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.

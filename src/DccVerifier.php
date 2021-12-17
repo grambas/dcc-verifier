@@ -10,6 +10,7 @@ use CBOR\ListObject;
 use CBOR\MapObject;
 use CBOR\OtherObject\OtherObjectManager;
 use CBOR\StringStream;
+use CBOR\Tag\TagManager;
 use CBOR\Tag\TagObjectManager;
 use CBOR\TextStringObject;
 use Cose\Algorithm\Signature\ECDSA\ES256;
@@ -61,9 +62,9 @@ class DccVerifier
     {
         $this->trustListRepository = $trustListRepository;
 
-        $tagObjectManager = new TagObjectManager();
-        $tagObjectManager->add(CoseSign1Tag::class);
-        $this->cborDecoder = new Decoder($tagObjectManager, new OtherObjectManager());
+        $tagManager = new TagManager();
+        $tagManager->add(CoseSign1Tag::class);
+        $this->cborDecoder = new Decoder($tagManager, new OtherObjectManager());
 
         $this->raw = $raw;
     }
