@@ -14,6 +14,9 @@ Via Composer
 ``` bash
 $ composer require grambas/dcc-verifier
 ```
+## Demo
+
+This SDK is used in Demo API Project- [dcc-verifier.de](https://dcc-verifier.de/) which is also open sourced at [grambas/dcc-verifier-api](https://github.com/grambas/dcc-verifier-api)
 
 ## Info
 
